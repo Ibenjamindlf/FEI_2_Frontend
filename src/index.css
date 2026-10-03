@@ -1,10 +1,18 @@
 @import "tailwindcss";
 
 /*
+  Modo oscuro por clase (equivalente en v4 al `darkMode: 'class'` de v3): el
+  tema oscuro se activa con `.dark` en <html>. La clase la pone el script de
+  index.html antes del primer render y después la cambia TemaProvider. Casi
+  todo se resuelve con los tokens de abajo; `dark:` queda para casos puntuales.
+*/
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
   Paleta del sitio: solo rojo, negro y blanco.
   `--color-*: initial` borra la paleta por defecto de Tailwind, así cualquier
   color que no sea de esta paleta (por ejemplo, uno residual del template) no
-  genera CSS. Los grises se obtienen con opacidad: `text-white/60`, `bg-black/50`.
+  genera CSS. Los grises se obtienen con opacidad: `text-tinta/60`, `bg-fondo/50`.
 */
 @theme {
   --color-*: initial;
@@ -12,7 +20,19 @@
   --color-white: #fff;
   --color-red-500: #ef3a41; /* texto/acentos sobre negro (contraste 5.3:1) */
   --color-red-600: #d11a21; /* rojo principal: texto blanco encima 5.4:1 */
-  --color-red-700: #a3121a; /* hover de superficies rojas */
+  --color-red-700: #a3121a; /* hover de superficies rojas, acento en claro */
+
+  /*
+    Tokens que se invierten según el tema. Acá están los valores del modo
+    claro; `.dark` los pisa más abajo. Se usan en vez de white/black para todo
+    lo que tiene que cambiar (`text-tinta/70`, `bg-fondo/95`, `border-tinta/10`).
+    `white` y `black` quedan para lo que no se invierte, como el texto sobre
+    rojo o el logo.
+  */
+  --color-tinta: var(--color-black); /* texto e íconos */
+  --color-fondo: var(--color-white);
+  /* Rojo para texto, íconos y bordes: red-500 sobre blanco no llega a 4.5:1 */
+  --color-acento: var(--color-red-700);
 
   --font-sans: "Barlow", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Barlow Condensed", "Barlow", ui-sans-serif, system-ui,
@@ -20,6 +40,51 @@
 }
 
 @layer base {
+  /*
+    Variables de cada tema que no son colores de la paleta: las superficies de
+    vidrio y las manchas rojas del fondo. En claro el vidrio es blanco
+    translúcido con borde oscuro sutil, y las manchas son más suaves para que
+    el rojo y el texto mantengan el contraste.
+  */
+  :root {
+    color-scheme: light;
+
+    --vidrio-fondo: --alpha(var(--color-white) / 55%);
+    --vidrio-borde: --alpha(var(--color-black) / 10%);
+    --vidrio-brillo: --alpha(var(--color-white) / 80%);
+    --vidrio-sombra: --alpha(var(--color-black) / 15%);
+    --vidrio-denso-fondo: --alpha(var(--color-white) / 75%);
+    --vidrio-denso-borde: --alpha(var(--color-black) / 10%);
+    --vidrio-denso-sombra: --alpha(var(--color-black) / 15%);
+    /* Texto blanco encima: 5.2:1 */
+    --vidrio-rojo-fondo: --alpha(var(--color-red-600) / 95%);
+
+    --mancha-1: --alpha(var(--color-red-600) / 20%);
+    --mancha-2: --alpha(var(--color-red-700) / 15%);
+    --mancha-3: --alpha(var(--color-red-600) / 12%);
+  }
+
+  .dark {
+    color-scheme: dark;
+
+    --color-tinta: var(--color-white);
+    --color-fondo: var(--color-black);
+    --color-acento: var(--color-red-500);
+
+    --vidrio-fondo: --alpha(var(--color-white) / 7%);
+    --vidrio-borde: --alpha(var(--color-white) / 12%);
+    --vidrio-brillo: --alpha(var(--color-white) / 12%);
+    --vidrio-sombra: --alpha(var(--color-black) / 70%);
+    --vidrio-denso-fondo: --alpha(var(--color-black) / 55%);
+    --vidrio-denso-borde: --alpha(var(--color-white) / 10%);
+    --vidrio-denso-sombra: --alpha(var(--color-black) / 80%);
+    --vidrio-rojo-fondo: --alpha(var(--color-red-600) / 85%);
+
+    --mancha-1: --alpha(var(--color-red-600) / 35%);
+    --mancha-2: --alpha(var(--color-red-700) / 30%);
+    --mancha-3: --alpha(var(--color-red-600) / 20%);
+  }
+
   /*
     Compatibilidad con Tailwind v3 (snippet de la guía oficial de migración):
     `border` sin color usa un borde sutil en vez de `currentcolor`, y los
@@ -30,7 +95,7 @@
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: --alpha(var(--color-white) / 15%);
+    border-color: --alpha(var(--color-tinta) / 15%);
   }
 
   button:not(:disabled),
@@ -39,25 +104,21 @@
   }
 
   /*
-    Fondo negro con manchas rojas desenfocadas: el vidrio necesita algo
+    Fondo del tema con manchas rojas desenfocadas: el vidrio necesita algo
     detrás para que el blur se note.
   */
   body {
-    @apply bg-black font-sans text-white antialiased;
+    @apply bg-fondo font-sans text-tinta antialiased;
     background-image:
-      radial-gradient(
-        40rem 30rem at 5% 0%,
-        --alpha(var(--color-red-600) / 35%),
-        transparent 70%
-      ),
+      radial-gradient(40rem 30rem at 5% 0%, var(--mancha-1), transparent 70%),
       radial-gradient(
         35rem 35rem at 100% 45%,
-        --alpha(var(--color-red-700) / 30%),
+        var(--mancha-2),
         transparent 70%
       ),
       radial-gradient(
         30rem 25rem at 25% 100%,
-        --alpha(var(--color-red-600) / 20%),
+        var(--mancha-3),
         transparent 70%
       );
     background-attachment: fixed;
@@ -72,30 +133,33 @@
 
 /*
   Vidrio (glassmorphism): superficie translúcida, desenfoque del fondo, borde
-  sutil, brillo interno arriba y sombra suave.
+  sutil, brillo interno arriba y sombra suave. Los valores de cada tema están
+  en las variables `--vidrio-*` de la capa base.
 */
 @utility vidrio {
-  background-color: --alpha(var(--color-white) / 7%);
-  border: 1px solid --alpha(var(--color-white) / 12%);
+  background-color: var(--vidrio-fondo);
+  border: 1px solid var(--vidrio-borde);
   box-shadow:
-    inset 0 1px 0 --alpha(var(--color-white) / 12%),
-    0 10px 30px -10px --alpha(var(--color-black) / 70%);
+    inset 0 1px 0 var(--vidrio-brillo),
+    0 10px 30px -10px var(--vidrio-sombra);
   -webkit-backdrop-filter: blur(20px) saturate(160%);
   backdrop-filter: blur(20px) saturate(160%);
 }
 
-/* Vidrio oscuro y más opaco: barras de navegación y footer. */
+/* Vidrio más opaco, del color del fondo: barras de navegación y footer. */
 @utility vidrio-denso {
-  background-color: --alpha(var(--color-black) / 55%);
-  border: 1px solid --alpha(var(--color-white) / 10%);
-  box-shadow: 0 10px 30px -10px --alpha(var(--color-black) / 80%);
+  background-color: var(--vidrio-denso-fondo);
+  border: 1px solid var(--vidrio-denso-borde);
+  box-shadow: 0 10px 30px -10px var(--vidrio-denso-sombra);
   -webkit-backdrop-filter: blur(24px) saturate(160%);
   backdrop-filter: blur(24px) saturate(160%);
 }
 
-/* Vidrio tintado de rojo: botones primarios y etiquetas. */
+/* Vidrio tintado de rojo: botones primarios y etiquetas. Siempre con texto
+   blanco, en los dos temas. */
 @utility vidrio-rojo {
-  background-color: --alpha(var(--color-red-600) / 85%);
+  color: var(--color-white);
+  background-color: var(--vidrio-rojo-fondo);
   border: 1px solid --alpha(var(--color-white) / 20%);
   box-shadow:
     inset 0 1px 0 --alpha(var(--color-white) / 25%),
@@ -131,5 +195,5 @@
 
 /* Campos de formulario sobre vidrio. */
 @utility campo {
-  @apply rounded-md border border-white/15 bg-white/5 px-4 py-2.5 text-white transition outline-none placeholder:text-white/50 focus:border-red-500 focus:ring-2 focus:ring-red-600/40;
+  @apply rounded-md border border-tinta/15 bg-tinta/5 px-4 py-2.5 text-tinta transition outline-none placeholder:text-tinta/60 focus:border-acento focus:ring-2 focus:ring-red-600/40;
 }

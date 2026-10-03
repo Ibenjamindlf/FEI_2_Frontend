@@ -5,6 +5,7 @@ import { Link } from 'react-router'
 import useAuth from '../../hooks/useAuth'
 import Logo from '../Logo'
 import MenuPerfil from '../MenuPerfil'
+import SelectorTema from '../SelectorTema'
 import { NAV_LINKS } from './navLinks'
 
 function SearchIcon() {
@@ -50,12 +51,12 @@ function SearchForm({ className }) {
   return (
     <form
       role="search"
-      className={`h-10 items-center overflow-hidden rounded-md border bg-white/5 transition focus-within:border-red-500 ${className}`}
+      className={`h-10 items-center overflow-hidden rounded-md border bg-tinta/5 transition focus-within:border-acento ${className}`}
       onSubmit={(e) => e.preventDefault()}
     >
       <SearchIcon />
       <input
-        className="w-11/12 bg-transparent text-white outline-hidden placeholder:text-white/50"
+        className="w-11/12 bg-transparent text-tinta outline-hidden placeholder:text-tinta/60"
         type="search"
         placeholder="Buscar maquinaria"
         aria-label="Buscar maquinaria"
@@ -79,7 +80,7 @@ function AccesoUsuario({ onIngresar, panelClassName }) {
     <Link
       to="/login"
       onClick={onIngresar}
-      className="flex cursor-pointer flex-col items-center justify-center transition hover:text-red-500"
+      className="flex cursor-pointer flex-col items-center justify-center transition hover:text-acento"
     >
       <UserIcon />
       <p className="text-xs">Ingresar</p>
@@ -98,12 +99,22 @@ export default function Header() {
           <Logo />
         </Link>
 
-        <div className="md:hidden">
+        <SearchForm className="hidden w-2/5 md:flex" />
+
+        {/* El selector de tema queda siempre visible, con o sin sesión; en
+            móvil va al lado del botón del menú. */}
+        <div className="flex items-center gap-3">
+          <SelectorTema />
+
+          <div className="hidden md:flex">
+            <AccesoUsuario />
+          </div>
+
           <button
             onClick={() => setMenuAbierto((abierto) => !abierto)}
             aria-label="Abrir menú"
             aria-expanded={menuAbierto}
-            className="transition hover:text-red-500"
+            className="transition hover:text-acento md:hidden"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -121,17 +132,11 @@ export default function Header() {
             </svg>
           </button>
         </div>
-
-        <SearchForm className="hidden w-2/5 md:flex" />
-
-        <div className="hidden gap-3 md:flex">
-          <AccesoUsuario />
-        </div>
       </header>
 
       {/* Menú hamburguesa (móvil) */}
       {menuAbierto && (
-        <section className="absolute right-0 left-0 z-50 h-screen w-full bg-black/95 md:hidden">
+        <section className="absolute right-0 left-0 z-50 h-screen w-full bg-fondo/95 md:hidden">
           <div className="mx-auto flex w-full justify-center gap-3 py-4">
             <AccesoUsuario
               onIngresar={cerrarMenu}
@@ -147,7 +152,7 @@ export default function Header() {
                 <Link
                   to={to}
                   onClick={cerrarMenu}
-                  className="transition hover:text-red-500"
+                  className="transition hover:text-acento"
                 >
                   {label}
                 </Link>

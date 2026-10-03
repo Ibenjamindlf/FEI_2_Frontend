@@ -43,8 +43,8 @@ export default function BotonFavorito({ maquina, className = '' }) {
       aria-label={etiqueta}
       aria-pressed={activa}
       title={etiqueta}
-      className={`vidrio-denso flex h-9 w-9 items-center justify-center rounded-full transition hover:border-red-500 hover:text-red-500 ${
-        activa ? 'text-red-500' : 'text-white'
+      className={`vidrio-denso flex h-9 w-9 items-center justify-center rounded-full transition hover:border-acento hover:text-acento ${
+        activa ? 'text-acento' : 'text-tinta'
       } ${className}`}
     >
       <svg

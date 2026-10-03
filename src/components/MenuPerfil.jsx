@@ -65,8 +65,8 @@ export default function MenuPerfil({ panelClassName = 'right-0' }) {
         aria-label={`Perfil de ${usuario.username}`}
         aria-expanded={abierto}
         aria-controls={panelId}
-        className={`vidrio flex h-10 w-10 items-center justify-center rounded-full transition hover:border-red-500 hover:text-red-500 ${
-          abierto ? 'border-red-500! text-red-500' : ''
+        className={`vidrio flex h-10 w-10 items-center justify-center rounded-full transition hover:border-acento hover:text-acento ${
+          abierto ? 'border-acento! text-acento' : ''
         }`}
       >
         <AvatarIcon />
@@ -79,18 +79,18 @@ export default function MenuPerfil({ panelClassName = 'right-0' }) {
         >
           <div className="franja-peligro h-1" />
           <div className="px-4 py-3 text-left">
-            <p className="text-xs text-white/60">Sesión iniciada como</p>
+            <p className="text-xs text-tinta/60">Sesión iniciada como</p>
             <p className="font-display truncate text-lg font-semibold tracking-wide">
               {usuario.username}
             </p>
-            <p className="truncate text-xs text-white/60">{usuario.email}</p>
+            <p className="truncate text-xs text-tinta/60">{usuario.email}</p>
           </div>
-          <div className="border-t border-white/10 p-2">
+          <div className="border-t border-tinta/10 p-2">
             <button
               type="button"
               onClick={cerrarSesion}
               disabled={cerrando}
-              className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm transition hover:bg-red-600/20 hover:text-red-500 disabled:cursor-wait disabled:opacity-60"
+              className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm transition hover:bg-red-600/20 hover:text-acento disabled:cursor-wait disabled:opacity-60"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

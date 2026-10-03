@@ -1,8 +1,8 @@
 // Markup adaptado de tailwind-ecommerce (MIT, Bogdan Bulakh):
 // https://github.com/bbulakh/tailwind-ecommerce
 import { Link } from 'react-router'
-import heroImg from '../assets/images/hero.svg'
 import EstadoCarga from '../components/EstadoCarga'
+import HeroIlustracion from '../components/HeroIlustracion'
 import MaquinaCard from '../components/MaquinaCard'
 import useAuth from '../hooks/useAuth'
 import useMaquinas from '../hooks/useMaquinas'
@@ -10,7 +10,7 @@ import useMaquinas from '../hooks/useMaquinas'
 // Esqueleto de las tarjetas de "Tipos de maquinaria" (solo imagen).
 function TipoEsqueleto() {
   return (
-    <div className="aspect-3/2 animate-pulse rounded-xl border border-white/10 bg-white/10" />
+    <div className="aspect-3/2 animate-pulse rounded-xl border border-tinta/10 bg-tinta/10" />
   )
 }
 
@@ -53,24 +53,20 @@ export default function Home() {
     <>
       {/* Hero */}
       <div className="mx-auto mt-6 max-w-[1200px] px-5">
-        <div className="relative overflow-hidden rounded-2xl border border-white/10">
-          <img
-            className="h-[460px] w-full object-cover object-right lg:h-[500px]"
-            src={heroImg}
-            alt=""
-          />
+        <div className="relative overflow-hidden rounded-2xl border border-tinta/10">
+          <HeroIlustracion className="block h-[460px] w-full lg:h-[500px]" />
 
           <div className="vidrio absolute inset-x-4 bottom-4 flex flex-col rounded-xl p-6 text-center lg:top-1/2 lg:right-auto lg:bottom-auto lg:left-10 lg:w-[560px] lg:-translate-y-1/2 lg:p-10 lg:text-left">
             <span className="mx-auto mb-4 h-1 w-16 bg-red-600 lg:mx-0" />
             {usuario && (
-              <p className="font-display mb-1 truncate text-xl font-semibold tracking-wider text-red-500 lg:text-2xl">
+              <p className="font-display mb-1 truncate text-xl font-semibold tracking-wider text-acento lg:text-2xl">
                 Hola {usuario.username}
               </p>
             )}
             <h1 className="text-4xl font-bold sm:text-5xl lg:text-6xl">
               Maquinaria para cada obra
             </h1>
-            <p className="pt-3 text-sm text-white/80 lg:pt-5 lg:text-base">
+            <p className="pt-3 text-sm text-tinta/80 lg:pt-5 lg:text-base">
               Explorá nuestro catálogo de excavadoras, retroexcavadoras,
               cargadoras y más. Encontrá la máquina que necesitás por tipo,
               marca o modelo.
@@ -109,7 +105,7 @@ export default function Home() {
               <h3 className="text-left text-sm font-bold lg:text-base">
                 {titulo}
               </h3>
-              <p className="text-left text-xs text-white/70 lg:text-sm">
+              <p className="text-left text-xs text-tinta/70 lg:text-sm">
                 {texto}
               </p>
             </div>
@@ -136,7 +132,7 @@ export default function Home() {
           <Link
             key={tipo}
             to="/catalogo"
-            className="group relative overflow-hidden rounded-xl border border-white/10 transition hover:border-red-500/60"
+            className="group relative overflow-hidden rounded-xl border border-tinta/10 transition hover:border-acento/60"
           >
             {imagenes[0] ? (
               <img
@@ -145,7 +141,7 @@ export default function Home() {
                 alt=""
               />
             ) : (
-              <div className="aspect-3/2 w-full bg-white/5" />
+              <div className="aspect-3/2 w-full bg-tinta/5" />
             )}
             <p className="vidrio-denso font-display pointer-events-none absolute inset-x-2 bottom-2 rounded-md px-2 py-1 text-center text-xs font-semibold tracking-wider uppercase lg:px-3 lg:py-1.5 lg:text-lg">
               {tipo}
@@ -177,13 +173,13 @@ export default function Home() {
       <div className="mx-auto max-w-[1200px] px-5 pb-10">
         <section className="vidrio relative mt-10 flex justify-between overflow-hidden rounded-2xl">
           <div className="relative z-10 px-6 py-10 lg:px-16">
-            <p className="font-display tracking-[0.3em] text-white/70">
+            <p className="font-display tracking-[0.3em] text-tinta/70">
               EXPLORÁ TODO
             </p>
-            <h2 className="pt-4 text-5xl font-bold text-red-500 lg:text-6xl">
+            <h2 className="pt-4 text-5xl font-bold text-acento lg:text-6xl">
               Catálogo
             </h2>
-            <p className="font-display pt-4 tracking-wider text-white/90">
+            <p className="font-display pt-4 tracking-wider text-tinta/90">
               EXCAVADORAS, RETROEXCAVADORAS, <br />
               CARGADORAS Y MÁS
             </p>

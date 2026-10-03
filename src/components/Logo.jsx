@@ -25,7 +25,7 @@ export default function Logo({ className = '' }) {
         <span className="block text-xl font-bold tracking-wider">
           Maquinaria
         </span>
-        <span className="block text-[0.65rem] font-medium tracking-[0.3em] text-white/70">
+        <span className="block text-[0.65rem] font-medium tracking-[0.3em] text-tinta/70">
           Catálogo
         </span>
       </span>

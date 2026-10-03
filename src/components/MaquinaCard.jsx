@@ -7,7 +7,7 @@ export default function MaquinaCard({ maquina }) {
   const portada = imagenes[0]
 
   return (
-    <article className="vidrio flex flex-col overflow-hidden rounded-xl transition duration-300 hover:-translate-y-1 hover:border-red-500/50">
+    <article className="vidrio flex flex-col overflow-hidden rounded-xl transition duration-300 hover:-translate-y-1 hover:border-acento/50">
       <div className="relative flex">
         {portada ? (
           <img
@@ -17,7 +17,7 @@ export default function MaquinaCard({ maquina }) {
             loading="lazy"
           />
         ) : (
-          <div className="aspect-3/2 w-full bg-white/5" />
+          <div className="aspect-3/2 w-full bg-tinta/5" />
         )}
 
         <div className="vidrio-rojo esquina-cortada absolute top-2 left-2 flex items-center justify-center">
