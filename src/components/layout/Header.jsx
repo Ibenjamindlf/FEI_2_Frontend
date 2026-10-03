@@ -2,7 +2,7 @@
 // https://github.com/bbulakh/tailwind-ecommerce
 import { useState } from 'react'
 import { Link } from 'react-router'
-import logo from '../../assets/images/company-logo.svg'
+import Logo from '../Logo'
 import { NAV_LINKS } from './navLinks'
 
 function SearchIcon() {
@@ -48,17 +48,17 @@ function SearchForm({ className }) {
   return (
     <form
       role="search"
-      className={`h-9 items-center border ${className}`}
+      className={`h-10 items-center overflow-hidden rounded-md border bg-white/5 transition focus-within:border-red-500 ${className}`}
       onSubmit={(e) => e.preventDefault()}
     >
       <SearchIcon />
       <input
-        className="w-11/12 outline-hidden"
+        className="w-11/12 bg-transparent text-white outline-hidden placeholder:text-white/50"
         type="search"
         placeholder="Buscar maquinaria"
         aria-label="Buscar maquinaria"
       />
-      <button className="ml-auto h-full bg-amber-400 px-4 hover:bg-yellow-300">
+      <button className="boton-primario ml-auto h-full px-5 text-sm">
         Buscar
       </button>
     </form>
@@ -72,8 +72,8 @@ export default function Header() {
   return (
     <>
       <header className="mx-auto flex h-16 w-full max-w-[1200px] items-center justify-between px-5">
-        <Link to="/" onClick={cerrarMenu}>
-          <img className="cursor-pointer" src={logo} alt="Inicio" />
+        <Link to="/" onClick={cerrarMenu} aria-label="Inicio">
+          <Logo />
         </Link>
 
         <div className="md:hidden">
@@ -81,6 +81,7 @@ export default function Header() {
             onClick={() => setMenuAbierto((abierto) => !abierto)}
             aria-label="Abrir menú"
             aria-expanded={menuAbierto}
+            className="transition hover:text-red-500"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -104,7 +105,7 @@ export default function Header() {
         <div className="hidden gap-3 md:flex">
           <Link
             to="/login"
-            className="flex cursor-pointer flex-col items-center justify-center"
+            className="flex cursor-pointer flex-col items-center justify-center transition hover:text-red-500"
           >
             <UserIcon />
             <p className="text-xs">Ingresar</p>
@@ -114,12 +115,12 @@ export default function Header() {
 
       {/* Menú hamburguesa (móvil) */}
       {menuAbierto && (
-        <section className="absolute right-0 left-0 z-50 h-screen w-full bg-white md:hidden">
+        <section className="absolute right-0 left-0 z-50 h-screen w-full bg-black/95 md:hidden">
           <div className="mx-auto flex w-full justify-center gap-3 py-4">
             <Link
               to="/login"
               onClick={cerrarMenu}
-              className="flex cursor-pointer flex-col items-center justify-center"
+              className="flex cursor-pointer flex-col items-center justify-center transition hover:text-red-500"
             >
               <UserIcon />
               <p className="text-xs">Ingresar</p>
@@ -128,10 +129,14 @@ export default function Header() {
 
           <SearchForm className="mx-5 my-4 flex" />
 
-          <ul className="text-center font-medium">
+          <ul className="font-display text-center text-lg font-medium tracking-wider uppercase">
             {NAV_LINKS.map(({ to, label }) => (
               <li key={to} className="py-2">
-                <Link to={to} onClick={cerrarMenu}>
+                <Link
+                  to={to}
+                  onClick={cerrarMenu}
+                  className="transition hover:text-red-500"
+                >
                   {label}
                 </Link>
               </li>
