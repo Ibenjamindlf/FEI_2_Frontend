@@ -4,7 +4,7 @@ export default function Aviso({ children, onCerrar }) {
   return (
     <div
       role="alert"
-      className="vidrio-denso fixed inset-x-4 bottom-4 z-50 mx-auto flex max-w-md items-start gap-3 rounded-xl border-red-500/60! px-4 py-3 text-sm"
+      className="vidrio-denso fixed inset-x-4 bottom-4 z-50 mx-auto flex max-w-md items-start gap-3 rounded-xl border-acento/60! px-4 py-3 text-sm"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -12,7 +12,7 @@ export default function Aviso({ children, onCerrar }) {
         viewBox="0 0 24 24"
         strokeWidth="1.5"
         stroke="currentColor"
-        className="h-5 w-5 shrink-0 text-red-500"
+        className="h-5 w-5 shrink-0 text-acento"
         aria-hidden="true"
       >
         <path
@@ -26,7 +26,7 @@ export default function Aviso({ children, onCerrar }) {
         type="button"
         onClick={onCerrar}
         aria-label="Cerrar aviso"
-        className="text-white/60 transition hover:text-red-500"
+        className="text-tinta/60 transition hover:text-acento"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
