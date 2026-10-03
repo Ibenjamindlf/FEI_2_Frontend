@@ -1,8 +1,10 @@
 // Markup adaptado de tailwind-ecommerce (MIT, Bogdan Bulakh):
 // https://github.com/bbulakh/tailwind-ecommerce
-import { Link } from 'react-router'
+import { Link, useSearchParams } from 'react-router'
 import EstadoCarga from '../components/EstadoCarga'
 import MaquinaCard from '../components/MaquinaCard'
+import useAuth from '../hooks/useAuth'
+import useFavoritos from '../hooks/useFavoritos'
 import useMaquinas from '../hooks/useMaquinas'
 
 // Cuenta cuántas máquinas hay por valor de un campo (ej: por tipo o marca).
@@ -28,6 +30,26 @@ function ChevronDown() {
         strokeLinecap="round"
         strokeLinejoin="round"
         d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+      />
+    </svg>
+  )
+}
+
+function HeartIcon({ relleno }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill={relleno ? 'currentColor' : 'none'}
+      viewBox="0 0 24 24"
+      strokeWidth="1.5"
+      stroke="currentColor"
+      className="mr-2 h-4 w-4"
+      aria-hidden="true"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
       />
     </svg>
   )
@@ -62,6 +84,34 @@ function FiltroGrupo({ titulo, opciones, ultimo }) {
 
 export default function Catalogo() {
   const { maquinas, cargando, error, reintentar } = useMaquinas()
+  const { usuario, cargando: cargandoSesion } = useAuth()
+  const { favoritos } = useFavoritos()
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  // El filtro "Mis favoritas" va en la URL (?favoritas=1) para que se mantenga
+  // al recargar o al volver del login. Sin sesión no aplica.
+  const pideFavoritas = searchParams.get('favoritas') === '1'
+  const soloFavoritas = Boolean(usuario) && pideFavoritas
+  const visibles = soloFavoritas
+    ? maquinas.filter((m) => favoritos.has(m.documentId))
+    : maquinas
+  // Con ?favoritas=1 se espera a saber si hay sesión, para no mostrar todo el
+  // catálogo por un instante antes de filtrar.
+  const cargandoLista = cargando || (pideFavoritas && cargandoSesion)
+
+  const alternarSoloFavoritas = () => {
+    setSearchParams(
+      (params) => {
+        if (soloFavoritas) {
+          params.delete('favoritas')
+        } else {
+          params.set('favoritas', '1')
+        }
+        return params
+      },
+      { replace: true },
+    )
+  }
 
   return (
     <>
@@ -98,18 +148,18 @@ export default function Catalogo() {
         {/* Sidebar */}
         <aside className="hidden w-[300px] shrink-0 pl-5 lg:block">
           <div className="vidrio rounded-xl px-5">
-            <FiltroGrupo titulo="TIPO" opciones={contarPor(maquinas, 'tipo')} />
+            <FiltroGrupo titulo="TIPO" opciones={contarPor(visibles, 'tipo')} />
             <FiltroGrupo
               titulo="MARCA"
-              opciones={contarPor(maquinas, 'marca')}
+              opciones={contarPor(visibles, 'marca')}
               ultimo
             />
           </div>
         </aside>
 
         <div className="flex-1">
-          <div className="mb-5 flex items-center justify-between px-5">
-            <div className="flex gap-3">
+          <div className="mb-5 flex items-center justify-between gap-3 px-5">
+            <div className="flex flex-wrap gap-3">
               <button className="vidrio font-display flex items-center justify-center rounded-md px-4 py-2 tracking-wider sm:px-6 uppercase transition hover:border-red-500/60">
                 Ordenar
                 <ChevronDown />
@@ -119,24 +169,45 @@ export default function Catalogo() {
                 Filtros
                 <ChevronDown />
               </button>
+
+              {usuario && (
+                <button
+                  type="button"
+                  onClick={alternarSoloFavoritas}
+                  aria-pressed={soloFavoritas}
+                  className={`font-display flex items-center justify-center rounded-md px-4 py-2 tracking-wider uppercase transition sm:px-6 ${
+                    soloFavoritas
+                      ? 'vidrio-rojo hover:bg-red-700'
+                      : 'vidrio hover:border-red-500/60'
+                  }`}
+                >
+                  <HeartIcon relleno={soloFavoritas} />
+                  Mis favoritas
+                </button>
+              )}
             </div>
 
-            {!cargando && !error && (
+            {!cargandoLista && !error && (
               <p className="text-sm whitespace-nowrap text-white/60">
-                {maquinas.length}{' '}
-                {maquinas.length === 1 ? 'resultado' : 'resultados'}
+                {visibles.length}{' '}
+                {visibles.length === 1 ? 'resultado' : 'resultados'}
               </p>
             )}
           </div>
 
           <EstadoCarga
-            cargando={cargando}
+            cargando={cargandoLista}
             error={error}
-            vacio={maquinas.length === 0}
+            vacio={visibles.length === 0}
+            textoVacio={
+              soloFavoritas
+                ? 'Todavía no marcaste ninguna máquina como favorita. Tocá el corazón de una máquina para agregarla.'
+                : undefined
+            }
             onReintentar={reintentar}
             className="mx-auto grid max-w-[1200px] grid-cols-2 gap-4 px-5 pb-10 lg:grid-cols-3"
           >
-            {maquinas.map((maquina) => (
+            {visibles.map((maquina) => (
               <MaquinaCard key={maquina.documentId} maquina={maquina} />
             ))}
           </EstadoCarga>
