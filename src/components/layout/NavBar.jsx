@@ -1,6 +1,7 @@
 // Markup adaptado de tailwind-ecommerce (MIT, Bogdan Bulakh):
 // https://github.com/bbulakh/tailwind-ecommerce
 import { NavLink } from 'react-router'
+import useAuth from '../../hooks/useAuth'
 import { NAV_LINKS } from './navLinks'
 
 const linkClass = ({ isActive }) =>
@@ -11,6 +12,9 @@ const linkClass = ({ isActive }) =>
   }`
 
 export default function NavBar() {
+  // Con sesión, el acceso al perfil ya está en el header.
+  const { usuario, cargando } = useAuth()
+
   return (
     <nav className="relative border-t border-white/10">
       <div className="mx-auto hidden h-11 w-full max-w-[1200px] items-center md:flex">
@@ -22,11 +26,13 @@ export default function NavBar() {
           ))}
         </div>
 
-        <div className="ml-auto flex gap-4 px-5">
-          <NavLink to="/login" className={linkClass}>
-            Ingresar
-          </NavLink>
-        </div>
+        {!cargando && !usuario && (
+          <div className="ml-auto flex gap-4 px-5">
+            <NavLink to="/login" className={linkClass}>
+              Ingresar
+            </NavLink>
+          </div>
+        )}
       </div>
     </nav>
   )

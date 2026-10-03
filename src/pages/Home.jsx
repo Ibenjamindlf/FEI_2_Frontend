@@ -4,6 +4,7 @@ import { Link } from 'react-router'
 import heroImg from '../assets/images/hero.svg'
 import EstadoCarga from '../components/EstadoCarga'
 import MaquinaCard from '../components/MaquinaCard'
+import useAuth from '../hooks/useAuth'
 import useMaquinas from '../hooks/useMaquinas'
 
 // Esqueleto de las tarjetas de "Tipos de maquinaria" (solo imagen).
@@ -35,6 +36,7 @@ const BADGES = [
 ]
 
 export default function Home() {
+  const { usuario } = useAuth()
   // Ordenadas de la más nueva a la más vieja, para "Últimas incorporaciones".
   const { maquinas, cargando, error, reintentar } = useMaquinas({
     sort: 'createdAt:desc',
@@ -60,6 +62,11 @@ export default function Home() {
 
           <div className="vidrio absolute inset-x-4 bottom-4 flex flex-col rounded-xl p-6 text-center lg:top-1/2 lg:right-auto lg:bottom-auto lg:left-10 lg:w-[560px] lg:-translate-y-1/2 lg:p-10 lg:text-left">
             <span className="mx-auto mb-4 h-1 w-16 bg-red-600 lg:mx-0" />
+            {usuario && (
+              <p className="font-display mb-1 truncate text-xl font-semibold tracking-wider text-red-500 lg:text-2xl">
+                Hola {usuario.username}
+              </p>
+            )}
             <h1 className="text-4xl font-bold sm:text-5xl lg:text-6xl">
               Maquinaria para cada obra
             </h1>

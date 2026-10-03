@@ -1,10 +1,16 @@
 // Markup adaptado de tailwind-ecommerce (MIT, Bogdan Bulakh):
 // https://github.com/bbulakh/tailwind-ecommerce
 import { Link } from 'react-router'
+import useAuth from '../../hooks/useAuth'
 import Logo from '../Logo'
 import { NAV_LINKS } from './navLinks'
 
 export default function Footer() {
+  const { usuario } = useAuth()
+  const links = usuario
+    ? NAV_LINKS
+    : [...NAV_LINKS, { to: '/login', label: 'Ingresar' }]
+
   return (
     <footer className="vidrio-denso mt-10 border-x-0! border-b-0!">
       <div className="franja-peligro h-1.5" />
@@ -24,15 +30,13 @@ export default function Footer() {
             NAVEGACIÓN
           </p>
           <ul className="text-sm leading-8">
-            {[...NAV_LINKS, { to: '/login', label: 'Ingresar' }].map(
-              ({ to, label }) => (
-                <li key={to}>
-                  <Link to={to} className="transition hover:text-red-500">
-                    {label}
-                  </Link>
-                </li>
-              ),
-            )}
+            {links.map(({ to, label }) => (
+              <li key={to}>
+                <Link to={to} className="transition hover:text-red-500">
+                  {label}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
       </div>

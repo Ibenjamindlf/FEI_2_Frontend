@@ -1,8 +1,49 @@
 // Markup adaptado de tailwind-ecommerce (MIT, Bogdan Bulakh):
 // https://github.com/bbulakh/tailwind-ecommerce
+import { useState } from 'react'
+import { Navigate } from 'react-router'
+import useAuth from '../hooks/useAuth'
+
+// Traduce los errores de POST /auth/local (docs/api-backend.md, sección 7).
+function mensajeError(error) {
+  if (error?.status === 0) return error.message
+  if (error?.status === 400 && /blocked/i.test(error.message)) {
+    return 'Tu cuenta está bloqueada. Contactá a un administrador.'
+  }
+  if (error?.status === 400) return 'Usuario o contraseña incorrectos.'
+  if (error?.status === 429) {
+    return 'Hiciste demasiados intentos. Esperá un minuto y probá de nuevo.'
+  }
+  if (error?.status >= 500) {
+    return 'El servidor tuvo un problema. Probá de nuevo en unos minutos.'
+  }
+  return 'No se pudo iniciar sesión. Probá de nuevo.'
+}
+
 export default function Login() {
-  // El inicio de sesión real (POST /auth/local) se implementa en otra issue.
-  const handleSubmit = (e) => e.preventDefault()
+  const { usuario, login } = useAuth()
+  const [identifier, setIdentifier] = useState('')
+  const [password, setPassword] = useState('')
+  const [enviando, setEnviando] = useState(false)
+  const [error, setError] = useState(null)
+
+  // Con sesión iniciada (recién logueado o entrando a /login a mano) se vuelve
+  // al home, que muestra el saludo.
+  if (usuario) return <Navigate to="/" replace />
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setEnviando(true)
+    setError(null)
+
+    try {
+      await login(identifier.trim(), password)
+    } catch (err) {
+      setError(mensajeError(err))
+      setPassword('')
+      setEnviando(false)
+    }
+  }
 
   return (
     <section className="relative mx-auto mt-10 mb-10 max-w-[1200px] px-5">
@@ -19,6 +60,30 @@ export default function Login() {
           <p className="text-white/70">¡Bienvenido de nuevo!</p>
         </div>
 
+        {error && (
+          <div
+            role="alert"
+            className="mt-6 flex items-start gap-3 rounded-md border border-red-500/60 bg-red-600/15 px-4 py-3 text-sm"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+              className="h-5 w-5 shrink-0 text-red-500"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"
+              />
+            </svg>
+            <p>{error}</p>
+          </div>
+        )}
+
         <form className="mt-6 flex flex-col" onSubmit={handleSubmit}>
           <label htmlFor="identifier" className="text-sm text-white/80">
             Email o usuario
@@ -30,6 +95,9 @@ export default function Login() {
             type="text"
             placeholder="tuemail@dominio.com"
             autoComplete="username"
+            required
+            value={identifier}
+            onChange={(e) => setIdentifier(e.target.value)}
           />
 
           <label htmlFor="password" className="text-sm text-white/80">
@@ -42,10 +110,17 @@ export default function Login() {
             type="password"
             placeholder="•••••••"
             autoComplete="current-password"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
 
-          <button type="submit" className="boton-primario my-6 w-full py-3">
-            Ingresar
+          <button
+            type="submit"
+            disabled={enviando}
+            className="boton-primario my-6 w-full py-3 disabled:cursor-wait disabled:opacity-60"
+          >
+            {enviando ? 'Ingresando…' : 'Ingresar'}
           </button>
         </form>
       </div>
