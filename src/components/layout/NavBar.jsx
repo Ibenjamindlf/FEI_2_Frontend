@@ -5,10 +5,10 @@ import useAuth from '../../hooks/useAuth'
 import { NAV_LINKS } from './navLinks'
 
 const linkClass = ({ isActive }) =>
-  `font-display text-sm font-medium tracking-wider uppercase transition duration-100 hover:text-red-500 ${
+  `font-display text-sm font-medium tracking-wider uppercase transition duration-100 hover:text-acento ${
     isActive
-      ? 'text-white underline decoration-red-600 decoration-2 underline-offset-8'
-      : 'text-white/70'
+      ? 'text-tinta underline decoration-red-600 decoration-2 underline-offset-8'
+      : 'text-tinta/70'
   }`
 
 export default function NavBar() {
@@ -16,7 +16,7 @@ export default function NavBar() {
   const { usuario, cargando } = useAuth()
 
   return (
-    <nav className="relative border-t border-white/10">
+    <nav className="relative border-t border-tinta/10">
       <div className="mx-auto hidden h-11 w-full max-w-[1200px] items-center md:flex">
         <div className="mx-5 flex gap-8">
           {NAV_LINKS.map(({ to, label }) => (
