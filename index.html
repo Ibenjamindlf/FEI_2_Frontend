@@ -5,6 +5,26 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#000000" />
+    <script>
+      // Aplica el tema antes de que se pinte la página, para que no se vea
+      // un instante el tema equivocado. Usa la elección guardada (misma clave
+      // que src/services/tema.js) o, si no hay, la preferencia del sistema.
+      // Después lo maneja TemaProvider.
+      ;(function () {
+        var guardado = null
+        try {
+          guardado = localStorage.getItem('tema')
+        } catch (e) {}
+        var oscuro =
+          guardado === 'oscuro' ||
+          (guardado !== 'claro' &&
+            window.matchMedia('(prefers-color-scheme: dark)').matches)
+        document.documentElement.classList.toggle('dark', oscuro)
+        document
+          .querySelector('meta[name="theme-color"]')
+          .setAttribute('content', oscuro ? '#000000' : '#ffffff')
+      })()
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
