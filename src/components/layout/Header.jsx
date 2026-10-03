@@ -2,7 +2,9 @@
 // https://github.com/bbulakh/tailwind-ecommerce
 import { useState } from 'react'
 import { Link } from 'react-router'
+import useAuth from '../../hooks/useAuth'
 import Logo from '../Logo'
+import MenuPerfil from '../MenuPerfil'
 import { NAV_LINKS } from './navLinks'
 
 function SearchIcon() {
@@ -65,6 +67,26 @@ function SearchForm({ className }) {
   )
 }
 
+// Con sesión muestra el menú de perfil; sin sesión, el acceso a login.
+// Mientras se recupera la sesión deja el lugar vacío para que no parpadee.
+function AccesoUsuario({ onIngresar, panelClassName }) {
+  const { usuario, cargando } = useAuth()
+
+  if (cargando) return <div className="h-10 w-10" aria-hidden="true" />
+  if (usuario) return <MenuPerfil panelClassName={panelClassName} />
+
+  return (
+    <Link
+      to="/login"
+      onClick={onIngresar}
+      className="flex cursor-pointer flex-col items-center justify-center transition hover:text-red-500"
+    >
+      <UserIcon />
+      <p className="text-xs">Ingresar</p>
+    </Link>
+  )
+}
+
 export default function Header() {
   const [menuAbierto, setMenuAbierto] = useState(false)
   const cerrarMenu = () => setMenuAbierto(false)
@@ -103,13 +125,7 @@ export default function Header() {
         <SearchForm className="hidden w-2/5 md:flex" />
 
         <div className="hidden gap-3 md:flex">
-          <Link
-            to="/login"
-            className="flex cursor-pointer flex-col items-center justify-center transition hover:text-red-500"
-          >
-            <UserIcon />
-            <p className="text-xs">Ingresar</p>
-          </Link>
+          <AccesoUsuario />
         </div>
       </header>
 
@@ -117,14 +133,10 @@ export default function Header() {
       {menuAbierto && (
         <section className="absolute right-0 left-0 z-50 h-screen w-full bg-black/95 md:hidden">
           <div className="mx-auto flex w-full justify-center gap-3 py-4">
-            <Link
-              to="/login"
-              onClick={cerrarMenu}
-              className="flex cursor-pointer flex-col items-center justify-center transition hover:text-red-500"
-            >
-              <UserIcon />
-              <p className="text-xs">Ingresar</p>
-            </Link>
+            <AccesoUsuario
+              onIngresar={cerrarMenu}
+              panelClassName="left-1/2 -translate-x-1/2"
+            />
           </div>
 
           <SearchForm className="mx-5 my-4 flex" />
