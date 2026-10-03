@@ -5,7 +5,7 @@ export default function MaquinaCard({ maquina }) {
   const portada = imagen?.[0]
 
   return (
-    <article className="flex flex-col">
+    <article className="vidrio flex flex-col overflow-hidden rounded-xl transition duration-300 hover:-translate-y-1 hover:border-red-500/50">
       <div className="relative flex">
         {portada && (
           <img
@@ -15,16 +15,20 @@ export default function MaquinaCard({ maquina }) {
           />
         )}
 
-        <div className="absolute right-1 mt-3 flex items-center justify-center bg-amber-400">
-          <p className="px-2 py-2 text-sm">{tipo}</p>
+        <div className="vidrio-rojo esquina-cortada absolute top-2 right-2 flex items-center justify-center">
+          <p className="font-display px-3 py-1 text-xs font-semibold tracking-wider uppercase">
+            {tipo}
+          </p>
         </div>
       </div>
 
-      <div className="mb-5">
-        <p className="mt-2 uppercase">
+      <div className="px-4 py-3">
+        <p className="font-display text-lg font-semibold tracking-wide uppercase">
           {marca} {modelo}
         </p>
-        <p className="font-medium text-violet-900">Interno: {interno}</p>
+        <p className="text-sm text-white/70">
+          Interno: <span className="font-medium text-red-500">{interno}</span>
+        </p>
       </div>
     </article>
   )

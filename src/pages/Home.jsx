@@ -2,8 +2,7 @@
 // https://github.com/bbulakh/tailwind-ecommerce
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router'
-import heroImg from '../assets/images/header-bg-image.png'
-import bannerImg from '../assets/images/sale-bage-picture.png'
+import heroImg from '../assets/images/hero.svg'
 import MaquinaCard from '../components/MaquinaCard'
 import { getMaquinas } from '../services/maquinas'
 
@@ -47,85 +46,96 @@ export default function Home() {
   return (
     <>
       {/* Hero */}
-      <div className="relative">
-        <img
-          className="w-full object-cover brightness-50 lg:h-[500px]"
-          src={heroImg}
-          alt=""
-        />
+      <div className="mx-auto mt-6 max-w-[1200px] px-5">
+        <div className="relative overflow-hidden rounded-2xl border border-white/10">
+          <img
+            className="h-[460px] w-full object-cover object-right lg:h-[500px]"
+            src={heroImg}
+            alt=""
+          />
 
-        <div className="absolute top-1/2 left-1/2 mx-auto flex w-11/12 max-w-[1200px] -translate-x-1/2 -translate-y-1/2 flex-col text-center text-white lg:ml-5">
-          <h1 className="text-4xl font-bold sm:text-5xl lg:text-left">
-            Maquinaria para cada obra
-          </h1>
-          <p className="pt-3 text-xs lg:w-3/5 lg:pt-5 lg:text-left lg:text-base">
-            Explorá nuestro catálogo de excavadoras, retroexcavadoras,
-            cargadoras y más. Encontrá la máquina que necesitás por tipo, marca
-            o modelo.
-          </p>
-          <Link
-            to="/catalogo"
-            className="mx-auto mt-5 w-1/2 bg-amber-400 px-3 py-1 text-black transition duration-100 hover:bg-yellow-300 lg:mx-0 lg:flex lg:h-10 lg:w-fit lg:items-center lg:px-10"
-          >
-            Ver catálogo
-          </Link>
+          <div className="vidrio absolute inset-x-4 bottom-4 flex flex-col rounded-xl p-6 text-center lg:top-1/2 lg:right-auto lg:bottom-auto lg:left-10 lg:w-[560px] lg:-translate-y-1/2 lg:p-10 lg:text-left">
+            <span className="mx-auto mb-4 h-1 w-16 bg-red-600 lg:mx-0" />
+            <h1 className="text-4xl font-bold sm:text-5xl lg:text-6xl">
+              Maquinaria para cada obra
+            </h1>
+            <p className="pt-3 text-sm text-white/80 lg:pt-5 lg:text-base">
+              Explorá nuestro catálogo de excavadoras, retroexcavadoras,
+              cargadoras y más. Encontrá la máquina que necesitás por tipo,
+              marca o modelo.
+            </p>
+            <Link
+              to="/catalogo"
+              className="boton-primario mx-auto mt-6 px-10 py-3 lg:mx-0 lg:w-fit"
+            >
+              Ver catálogo
+            </Link>
+          </div>
         </div>
       </div>
 
       {/* Badges */}
-      <section className="container mx-auto my-8 flex flex-col justify-center gap-3 lg:flex-row">
+      <section className="mx-auto my-8 grid max-w-[1200px] gap-3 px-5 lg:grid-cols-3">
         {BADGES.map(({ titulo, texto, icono }) => (
           <div
             key={titulo}
-            className="mx-5 flex flex-row items-center justify-center border-2 border-yellow-400 px-5 py-4"
+            className="vidrio flex flex-row items-center rounded-xl px-5 py-4"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              className="h-6 w-6 text-violet-900 lg:mr-2"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d={icono} />
-            </svg>
+            <div className="vidrio-rojo esquina-cortada p-2.5">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="h-6 w-6"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d={icono} />
+              </svg>
+            </div>
 
-            <div className="ml-6 flex flex-col justify-center">
-              <h3 className="text-left text-xs font-bold lg:text-sm">
+            <div className="ml-5 flex flex-col justify-center">
+              <h3 className="text-left text-sm font-bold lg:text-base">
                 {titulo}
               </h3>
-              <p className="text-left text-xs lg:text-sm">{texto}</p>
+              <p className="text-left text-xs text-white/70 lg:text-sm">
+                {texto}
+              </p>
             </div>
           </div>
         ))}
       </section>
 
       {/* Tipos de maquinaria */}
-      <h2 className="mx-auto mb-5 max-w-[1200px] px-5">TIPOS DE MAQUINARIA</h2>
+      <h2 className="mx-auto mb-5 max-w-[1200px] px-5 text-2xl font-bold">
+        Tipos de maquinaria
+      </h2>
 
-      <section className="mx-auto grid max-w-[1200px] grid-cols-2 px-5 lg:grid-cols-3 lg:gap-5">
+      <section className="mx-auto grid max-w-[1200px] grid-cols-2 gap-4 px-5 lg:grid-cols-3">
         {tipos.map(({ tipo, imagen }) => (
-          <Link key={tipo} to="/catalogo">
-            <div className="relative cursor-pointer">
-              <img
-                className="mx-auto aspect-3/2 w-full object-cover brightness-50 transition duration-300 hover:brightness-100"
-                src={imagen[0].url}
-                alt=""
-              />
-              <p className="pointer-events-none absolute top-1/2 left-1/2 w-11/12 -translate-x-1/2 -translate-y-1/2 text-center text-white lg:text-xl">
-                {tipo}
-              </p>
-            </div>
+          <Link
+            key={tipo}
+            to="/catalogo"
+            className="group relative overflow-hidden rounded-xl border border-white/10 transition hover:border-red-500/60"
+          >
+            <img
+              className="mx-auto aspect-3/2 w-full object-cover transition duration-300 group-hover:scale-105"
+              src={imagen[0].url}
+              alt=""
+            />
+            <p className="vidrio-denso font-display pointer-events-none absolute inset-x-2 bottom-2 rounded-md px-2 py-1 text-center text-xs font-semibold tracking-wider uppercase lg:px-3 lg:py-1.5 lg:text-lg">
+              {tipo}
+            </p>
           </Link>
         ))}
       </section>
 
       {/* Últimas incorporaciones (reemplaza al slider del template) */}
-      <p className="mx-auto mt-10 mb-5 max-w-[1200px] px-5">
-        ÚLTIMAS INCORPORACIONES
-      </p>
+      <h2 className="mx-auto mt-10 mb-5 max-w-[1200px] px-5 text-2xl font-bold">
+        Últimas incorporaciones
+      </h2>
 
-      <section className="mx-auto grid max-w-[1200px] grid-cols-2 gap-3 px-5 lg:grid-cols-4">
+      <section className="mx-auto grid max-w-[1200px] grid-cols-2 gap-4 px-5 lg:grid-cols-4">
         {maquinas.slice(0, 4).map((maquina) => (
           <MaquinaCard key={maquina.documentId} maquina={maquina} />
         ))}
@@ -133,29 +143,28 @@ export default function Home() {
 
       {/* Banner */}
       <div className="mx-auto max-w-[1200px] px-5 pb-10">
-        <section className="mt-5 flex justify-between bg-violet-900 px-5">
-          <div className="px-3 py-8 lg:px-16">
-            <p className="text-white">EXPLORÁ TODO</p>
-            <h2 className="pt-6 text-5xl font-bold text-yellow-400">
-              CATÁLOGO
+        <section className="vidrio relative mt-10 flex justify-between overflow-hidden rounded-2xl">
+          <div className="relative z-10 px-6 py-10 lg:px-16">
+            <p className="font-display tracking-[0.3em] text-white/70">
+              EXPLORÁ TODO
+            </p>
+            <h2 className="pt-4 text-5xl font-bold text-red-500 lg:text-6xl">
+              Catálogo
             </h2>
-            <p className="pt-4 text-white">
+            <p className="font-display pt-4 tracking-wider text-white/90">
               EXCAVADORAS, RETROEXCAVADORAS, <br />
               CARGADORAS Y MÁS
             </p>
             <Link
               to="/catalogo"
-              className="mt-6 inline-block bg-amber-400 px-4 py-2 transition duration-100 hover:bg-yellow-300"
+              className="boton-primario mt-6 inline-block px-8 py-3"
             >
               Ver catálogo
             </Link>
           </div>
 
-          <img
-            className="-mr-5 hidden w-[550px] object-cover md:block"
-            src={bannerImg}
-            alt=""
-          />
+          {/* Franjas decorativas (reemplazan a la imagen del template) */}
+          <div className="franja-peligro absolute inset-y-0 right-0 hidden w-2/5 opacity-70 [clip-path:polygon(30%_0,100%_0,100%_100%,0_100%)] md:block" />
         </section>
       </div>
     </>
