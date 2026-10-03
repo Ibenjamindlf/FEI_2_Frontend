@@ -63,13 +63,13 @@ export default function Login() {
         <div>
           <span className="mb-4 block h-1 w-16 bg-red-600" />
           <h1 className="text-4xl font-bold">Ingresar</h1>
-          <p className="text-white/70">¡Bienvenido de nuevo!</p>
+          <p className="text-tinta/70">¡Bienvenido de nuevo!</p>
         </div>
 
         {aviso && (
           <div
             role="status"
-            className="mt-6 flex items-start gap-3 rounded-md border border-white/15 bg-white/5 px-4 py-3 text-sm"
+            className="mt-6 flex items-start gap-3 rounded-md border border-tinta/15 bg-tinta/5 px-4 py-3 text-sm"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -77,7 +77,7 @@ export default function Login() {
               viewBox="0 0 24 24"
               strokeWidth="1.5"
               stroke="currentColor"
-              className="h-5 w-5 shrink-0 text-red-500"
+              className="h-5 w-5 shrink-0 text-acento"
               aria-hidden="true"
             >
               <path
@@ -93,7 +93,7 @@ export default function Login() {
         {error && (
           <div
             role="alert"
-            className="mt-6 flex items-start gap-3 rounded-md border border-red-500/60 bg-red-600/15 px-4 py-3 text-sm"
+            className="mt-6 flex items-start gap-3 rounded-md border border-acento/60 bg-red-600/15 px-4 py-3 text-sm"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -101,7 +101,7 @@ export default function Login() {
               viewBox="0 0 24 24"
               strokeWidth="1.5"
               stroke="currentColor"
-              className="h-5 w-5 shrink-0 text-red-500"
+              className="h-5 w-5 shrink-0 text-acento"
               aria-hidden="true"
             >
               <path
@@ -115,7 +115,7 @@ export default function Login() {
         )}
 
         <form className="mt-6 flex flex-col" onSubmit={handleSubmit}>
-          <label htmlFor="identifier" className="text-sm text-white/80">
+          <label htmlFor="identifier" className="text-sm text-tinta/80">
             Email o usuario
           </label>
           <input
@@ -130,7 +130,7 @@ export default function Login() {
             onChange={(e) => setIdentifier(e.target.value)}
           />
 
-          <label htmlFor="password" className="text-sm text-white/80">
+          <label htmlFor="password" className="text-sm text-tinta/80">
             Contraseña
           </label>
           <input

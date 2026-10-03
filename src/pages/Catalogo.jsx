@@ -59,7 +59,7 @@ function HeartIcon({ relleno }) {
 // para un issue futuro.
 function FiltroGrupo({ titulo, opciones, ultimo }) {
   return (
-    <div className={`flex py-5 ${ultimo ? '' : 'border-b border-white/10'}`}>
+    <div className={`flex py-5 ${ultimo ? '' : 'border-b border-tinta/10'}`}>
       <div className="w-full">
         <p className="font-display mb-3 font-semibold tracking-wider">
           {titulo}
@@ -68,13 +68,13 @@ function FiltroGrupo({ titulo, opciones, ultimo }) {
         {opciones.map(([valor, cantidad]) => (
           <label
             key={valor}
-            className="flex w-full cursor-pointer justify-between py-1 transition hover:text-red-500"
+            className="flex w-full cursor-pointer justify-between py-1 transition hover:text-acento"
           >
             <span className="flex">
               <input type="checkbox" className="accent-red-600" />
               <span className="ml-4">{valor}</span>
             </span>
-            <span className="text-white/60">({cantidad})</span>
+            <span className="text-tinta/60">({cantidad})</span>
           </label>
         ))}
       </div>
@@ -122,7 +122,7 @@ export default function Catalogo() {
             <Link
               to="/"
               aria-label="Inicio"
-              className="text-white/70 transition hover:text-red-500"
+              className="text-tinta/70 transition hover:text-acento"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -136,9 +136,9 @@ export default function Catalogo() {
             </Link>
           </li>
           <li>
-            <span className="mx-2 text-white/40">/</span>
+            <span className="mx-2 text-tinta/40">/</span>
           </li>
-          <li className="font-display tracking-wider text-white uppercase">
+          <li className="font-display tracking-wider text-tinta uppercase">
             Catálogo
           </li>
         </ul>
@@ -160,12 +160,12 @@ export default function Catalogo() {
         <div className="flex-1">
           <div className="mb-5 flex items-center justify-between gap-3 px-5">
             <div className="flex flex-wrap gap-3">
-              <button className="vidrio font-display flex items-center justify-center rounded-md px-4 py-2 tracking-wider sm:px-6 uppercase transition hover:border-red-500/60">
+              <button className="vidrio font-display flex items-center justify-center rounded-md px-4 py-2 tracking-wider sm:px-6 uppercase transition hover:border-acento/60">
                 Ordenar
                 <ChevronDown />
               </button>
 
-              <button className="vidrio font-display flex items-center justify-center rounded-md px-4 py-2 tracking-wider sm:px-6 uppercase transition hover:border-red-500/60 lg:hidden">
+              <button className="vidrio font-display flex items-center justify-center rounded-md px-4 py-2 tracking-wider sm:px-6 uppercase transition hover:border-acento/60 lg:hidden">
                 Filtros
                 <ChevronDown />
               </button>
@@ -178,7 +178,7 @@ export default function Catalogo() {
                   className={`font-display flex items-center justify-center rounded-md px-4 py-2 tracking-wider uppercase transition sm:px-6 ${
                     soloFavoritas
                       ? 'vidrio-rojo hover:bg-red-700'
-                      : 'vidrio hover:border-red-500/60'
+                      : 'vidrio hover:border-acento/60'
                   }`}
                 >
                   <HeartIcon relleno={soloFavoritas} />
@@ -188,7 +188,7 @@ export default function Catalogo() {
             </div>
 
             {!cargandoLista && !error && (
-              <p className="text-sm whitespace-nowrap text-white/60">
+              <p className="text-sm whitespace-nowrap text-tinta/60">
                 {visibles.length}{' '}
                 {visibles.length === 1 ? 'resultado' : 'resultados'}
               </p>
