@@ -1,9 +1,9 @@
 // Markup adaptado de tailwind-ecommerce (MIT, Bogdan Bulakh):
 // https://github.com/bbulakh/tailwind-ecommerce
-import { useEffect, useState } from 'react'
 import { Link } from 'react-router'
+import EstadoCarga from '../components/EstadoCarga'
 import MaquinaCard from '../components/MaquinaCard'
-import { getMaquinas } from '../services/maquinas'
+import useMaquinas from '../hooks/useMaquinas'
 
 // Cuenta cuántas máquinas hay por valor de un campo (ej: por tipo o marca).
 function contarPor(maquinas, campo) {
@@ -33,8 +33,8 @@ function ChevronDown() {
   )
 }
 
-// Grupo de filtros del sidebar. Por ahora es solo visual: el filtrado se
-// implementa cuando se conecte la API.
+// Grupo de filtros del sidebar. Por ahora es solo visual: el filtrado queda
+// para un issue futuro.
 function FiltroGrupo({ titulo, opciones, ultimo }) {
   return (
     <div className={`flex py-5 ${ultimo ? '' : 'border-b border-white/10'}`}>
@@ -61,17 +61,7 @@ function FiltroGrupo({ titulo, opciones, ultimo }) {
 }
 
 export default function Catalogo() {
-  const [maquinas, setMaquinas] = useState([])
-
-  useEffect(() => {
-    let ignorar = false
-    getMaquinas().then(({ data }) => {
-      if (!ignorar) setMaquinas(data)
-    })
-    return () => {
-      ignorar = true
-    }
-  }, [])
+  const { maquinas, cargando, error, reintentar } = useMaquinas()
 
   return (
     <>
@@ -131,16 +121,25 @@ export default function Catalogo() {
               </button>
             </div>
 
-            <p className="text-sm whitespace-nowrap text-white/60">
-              {maquinas.length} resultados
-            </p>
+            {!cargando && !error && (
+              <p className="text-sm whitespace-nowrap text-white/60">
+                {maquinas.length}{' '}
+                {maquinas.length === 1 ? 'resultado' : 'resultados'}
+              </p>
+            )}
           </div>
 
-          <section className="mx-auto grid max-w-[1200px] grid-cols-2 gap-4 px-5 pb-10 lg:grid-cols-3">
+          <EstadoCarga
+            cargando={cargando}
+            error={error}
+            vacio={maquinas.length === 0}
+            onReintentar={reintentar}
+            className="mx-auto grid max-w-[1200px] grid-cols-2 gap-4 px-5 pb-10 lg:grid-cols-3"
+          >
             {maquinas.map((maquina) => (
               <MaquinaCard key={maquina.documentId} maquina={maquina} />
             ))}
-          </section>
+          </EstadoCarga>
         </div>
       </section>
     </>

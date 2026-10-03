@@ -1,10 +1,17 @@
 // Markup adaptado de tailwind-ecommerce (MIT, Bogdan Bulakh):
 // https://github.com/bbulakh/tailwind-ecommerce
-import { useEffect, useState } from 'react'
 import { Link } from 'react-router'
 import heroImg from '../assets/images/hero.svg'
+import EstadoCarga from '../components/EstadoCarga'
 import MaquinaCard from '../components/MaquinaCard'
-import { getMaquinas } from '../services/maquinas'
+import useMaquinas from '../hooks/useMaquinas'
+
+// Esqueleto de las tarjetas de "Tipos de maquinaria" (solo imagen).
+function TipoEsqueleto() {
+  return (
+    <div className="aspect-3/2 animate-pulse rounded-xl border border-white/10 bg-white/10" />
+  )
+}
 
 const BADGES = [
   {
@@ -28,20 +35,17 @@ const BADGES = [
 ]
 
 export default function Home() {
-  const [maquinas, setMaquinas] = useState([])
+  // Ordenadas de la más nueva a la más vieja, para "Últimas incorporaciones".
+  const { maquinas, cargando, error, reintentar } = useMaquinas({
+    sort: 'createdAt:desc',
+  })
+  const vacio = maquinas.length === 0
 
-  useEffect(() => {
-    let ignorar = false
-    getMaquinas().then(({ data }) => {
-      if (!ignorar) setMaquinas(data)
-    })
-    return () => {
-      ignorar = true
-    }
-  }, [])
-
-  // Un tipo por tarjeta, usando la imagen de la primera máquina de ese tipo.
-  const tipos = [...new Map(maquinas.map((m) => [m.tipo, m])).values()]
+  // Un tipo por tarjeta, usando la imagen de la máquina más nueva de ese tipo
+  // (la primera que aparece, porque vienen ordenadas por fecha).
+  const tipos = maquinas.filter(
+    (m, i) => maquinas.findIndex((otra) => otra.tipo === m.tipo) === i,
+  )
 
   return (
     <>
@@ -111,35 +115,56 @@ export default function Home() {
         Tipos de maquinaria
       </h2>
 
-      <section className="mx-auto grid max-w-[1200px] grid-cols-2 gap-4 px-5 lg:grid-cols-3">
-        {tipos.map(({ tipo, imagen }) => (
+      {/* Si falla o no hay máquinas, el aviso se muestra una sola vez acá. */}
+      <EstadoCarga
+        cargando={cargando}
+        error={error}
+        vacio={vacio}
+        onReintentar={reintentar}
+        cantidadEsqueletos={3}
+        Esqueleto={TipoEsqueleto}
+        className="mx-auto grid max-w-[1200px] grid-cols-2 gap-4 px-5 lg:grid-cols-3"
+      >
+        {tipos.map(({ tipo, imagenes }) => (
           <Link
             key={tipo}
             to="/catalogo"
             className="group relative overflow-hidden rounded-xl border border-white/10 transition hover:border-red-500/60"
           >
-            <img
-              className="mx-auto aspect-3/2 w-full object-cover transition duration-300 group-hover:scale-105"
-              src={imagen[0].url}
-              alt=""
-            />
+            {imagenes[0] ? (
+              <img
+                className="mx-auto aspect-3/2 w-full object-cover transition duration-300 group-hover:scale-105"
+                src={imagenes[0].src}
+                alt=""
+              />
+            ) : (
+              <div className="aspect-3/2 w-full bg-white/5" />
+            )}
             <p className="vidrio-denso font-display pointer-events-none absolute inset-x-2 bottom-2 rounded-md px-2 py-1 text-center text-xs font-semibold tracking-wider uppercase lg:px-3 lg:py-1.5 lg:text-lg">
               {tipo}
             </p>
           </Link>
         ))}
-      </section>
+      </EstadoCarga>
 
       {/* Últimas incorporaciones (reemplaza al slider del template) */}
-      <h2 className="mx-auto mt-10 mb-5 max-w-[1200px] px-5 text-2xl font-bold">
-        Últimas incorporaciones
-      </h2>
+      {!error && (cargando || !vacio) && (
+        <>
+          <h2 className="mx-auto mt-10 mb-5 max-w-[1200px] px-5 text-2xl font-bold">
+            Últimas incorporaciones
+          </h2>
 
-      <section className="mx-auto grid max-w-[1200px] grid-cols-2 gap-4 px-5 lg:grid-cols-4">
-        {maquinas.slice(0, 4).map((maquina) => (
-          <MaquinaCard key={maquina.documentId} maquina={maquina} />
-        ))}
-      </section>
+          <EstadoCarga
+            cargando={cargando}
+            cantidadEsqueletos={4}
+            className="mx-auto grid max-w-[1200px] grid-cols-2 gap-4 px-5 lg:grid-cols-4"
+          >
+            {maquinas.slice(0, 4).map((maquina) => (
+              <MaquinaCard key={maquina.documentId} maquina={maquina} />
+            ))}
+          </EstadoCarga>
+        </>
+      )}
 
       {/* Banner */}
       <div className="mx-auto max-w-[1200px] px-5 pb-10">
