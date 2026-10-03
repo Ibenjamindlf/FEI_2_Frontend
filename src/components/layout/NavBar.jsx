@@ -4,14 +4,16 @@ import { NavLink } from 'react-router'
 import { NAV_LINKS } from './navLinks'
 
 const linkClass = ({ isActive }) =>
-  `font-light transition duration-100 hover:text-yellow-400 hover:underline ${
-    isActive ? 'text-yellow-400' : 'text-white'
+  `font-display text-sm font-medium tracking-wider uppercase transition duration-100 hover:text-red-500 ${
+    isActive
+      ? 'text-white underline decoration-red-600 decoration-2 underline-offset-8'
+      : 'text-white/70'
   }`
 
 export default function NavBar() {
   return (
-    <nav className="relative bg-violet-900">
-      <div className="mx-auto hidden h-12 w-full max-w-[1200px] items-center md:flex">
+    <nav className="relative border-t border-white/10">
+      <div className="mx-auto hidden h-11 w-full max-w-[1200px] items-center md:flex">
         <div className="mx-5 flex gap-8">
           {NAV_LINKS.map(({ to, label }) => (
             <NavLink key={to} to={to} end className={linkClass}>
