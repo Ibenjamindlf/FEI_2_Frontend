@@ -1,7 +1,7 @@
 // Markup adaptado de tailwind-ecommerce (MIT, Bogdan Bulakh):
 // https://github.com/bbulakh/tailwind-ecommerce
 import { useState } from 'react'
-import { Navigate } from 'react-router'
+import { Navigate, useLocation } from 'react-router'
 import useAuth from '../hooks/useAuth'
 
 // Traduce los errores de POST /auth/local (docs/api-backend.md, sección 7).
@@ -22,14 +22,20 @@ function mensajeError(error) {
 
 export default function Login() {
   const { usuario, login } = useAuth()
+  const location = useLocation()
   const [identifier, setIdentifier] = useState('')
   const [password, setPassword] = useState('')
   const [enviando, setEnviando] = useState(false)
   const [error, setError] = useState(null)
 
+  // Quien llega desde otra página (ej. al tocar el corazón de una máquina sin
+  // sesión) trae un aviso y la ruta a la que volver.
+  const aviso = location.state?.aviso
+  const destino = location.state?.desde ?? '/'
+
   // Con sesión iniciada (recién logueado o entrando a /login a mano) se vuelve
-  // al home, que muestra el saludo.
-  if (usuario) return <Navigate to="/" replace />
+  // a la página de origen, o al home, que muestra el saludo.
+  if (usuario) return <Navigate to={destino} replace />
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -59,6 +65,30 @@ export default function Login() {
           <h1 className="text-4xl font-bold">Ingresar</h1>
           <p className="text-white/70">¡Bienvenido de nuevo!</p>
         </div>
+
+        {aviso && (
+          <div
+            role="status"
+            className="mt-6 flex items-start gap-3 rounded-md border border-white/15 bg-white/5 px-4 py-3 text-sm"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+              className="h-5 w-5 shrink-0 text-red-500"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
+              />
+            </svg>
+            <p>{aviso}</p>
+          </div>
+        )}
 
         {error && (
           <div

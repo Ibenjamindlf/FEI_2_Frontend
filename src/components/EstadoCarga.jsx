@@ -1,6 +1,7 @@
 // Envuelve una grilla de contenido traído de la API y muestra, según el caso,
 // esqueletos mientras carga, un panel de error con reintento, un panel de
-// lista vacía o el contenido. `className` son las clases de la grilla.
+// lista vacía o el contenido. `className` son las clases de la grilla y
+// `textoVacio` explica por qué no hay nada (ej. un filtro sin resultados).
 
 // Tarjeta con la misma forma que MaquinaCard, para que no salte el layout.
 export function TarjetaEsqueleto() {
@@ -56,6 +57,7 @@ export default function EstadoCarga({
   vacio,
   onReintentar,
   className,
+  textoVacio = 'Todavía no hay máquinas publicadas en el catálogo.',
   cantidadEsqueletos = 6,
   Esqueleto = TarjetaEsqueleto,
   children,
@@ -103,9 +105,7 @@ export default function EstadoCarga({
           titulo="No hay máquinas para mostrar"
           icono="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m6 4.125l2.25 2.25m0 0l2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"
         >
-          <p className="pt-2 text-sm text-white/70">
-            Todavía no hay máquinas publicadas en el catálogo.
-          </p>
+          <p className="pt-2 text-sm text-white/70">{textoVacio}</p>
         </Panel>
       </div>
     )
